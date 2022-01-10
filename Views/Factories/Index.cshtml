@@ -1,0 +1,113 @@
+﻿@model ProjectMediiMaster_BogdanIstrate.Models.LibraryViewModels.FactoryIndexData
+@{
+    ViewData["Title"] = "Factories";
+}
+<h2>Factories</h2>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Factory Name</th>
+            <th>Adress</th>
+            <th>Guitars</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Factories)
+        {
+            string selectedRow = "";
+            if (item.ID == (int?)ViewData["FactoryID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.FactoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Adress)
+                </td>
+
+                <td>
+                    @{
+                        foreach (var guitar in item.ReleasedGuitars)
+                        {
+                            @guitar.Guitar.Id @: @guitar.Guitar.Name <br />
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="Index" asp-route-id="@item.ID">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (Model.Guitars != null)
+{
+    <h3>Guitars Released by Selected Factories</h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Category</th>
+        </tr>
+        @foreach (var item in Model.Guitars)
+        {
+            string selectedRow = "";
+            if (item.Id == (int?)ViewData["GuitarID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.ActionLink("Select", "Index", new { guitarID = item.Id })
+                </td>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Description
+                </td>
+                <td>
+                    @item.Price
+                </td>
+                <td>
+                    @item.Category
+                </td>
+            </tr>
+          }
+        </table>
+      }
+        @if (Model.GuitarOrders != null)
+        {
+            <h3>
+                Customers that have ordered the Selected guitar
+            </h3>
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Order Date</th>
+                </tr>
+                @foreach (var item in Model.GuitarOrders)
+                {
+                    <tr>
+                        <td>
+                            @item.AppCustomer.Name
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderDate)
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+       
